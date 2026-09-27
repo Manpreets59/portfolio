@@ -3,14 +3,22 @@ import gsap from "gsap";
 import { lazy, Suspense } from "react";
 
 import TitleHeader from "../components/TitleHeader";
+import SceneErrorBoundary from "../components/SceneErrorBoundary";
+import { useInView } from "../hooks/useInView";
 import { techStackIcons, techStackImgs } from "../constants";
 
 const TechIconCardExperience = lazy(() =>
   import("../components/models/tech_logos/TechIconCardExperience")
 );
-// import { techStackImgs } from "../constants";
 
 const TechStack = () => {
+  // Delays mounting the 5 separate WebGL canvases below until this section
+  // is actually about to be scrolled into view, instead of all 5 running
+  // their render loops from the moment the page loads regardless of scroll
+  // position — this was a real, ongoing performance cost, not a one-time
+  // load cost.
+  const [sectionRef, inView] = useInView("300px");
+
   // Animate the tech cards in the skills section
   useGSAP(() => {
     // This animation is triggered when the user scrolls to the #skills wrapper
@@ -40,7 +48,7 @@ const TechStack = () => {
   });
 
   return (
-    <div id="skills" className="flex-center section-padding">
+    <div id="skills" ref={sectionRef} className="flex-center section-padding">
       <div className="w-full h-full md:px-10 px-5">
         <TitleHeader
           title="How I Can Contribute & My Key Skills"
@@ -65,7 +73,8 @@ const TechStack = () => {
                     renders instantly as a fallback so the icon is never blank while the
                     3D chunk + model are still loading. */}
                 <div className="tech-icon-wrapper">
-                  <Suspense
+                  <SceneErrorBoundary
+                    label={`${techStackIcon.name} 3D icon`}
                     fallback={
                       <img
                         src={techStackImgs[index]?.imgPath}
@@ -74,8 +83,20 @@ const TechStack = () => {
                       />
                     }
                   >
-                    <TechIconCardExperience model={techStackIcon} />
-                  </Suspense>
+                    <Suspense
+                      fallback={
+                        <img
+                          src={techStackImgs[index]?.imgPath}
+                          alt={techStackIcon.name}
+                          className="w-1/2 h-1/2 object-contain opacity-70"
+                        />
+                      }
+                    >
+                      {inView && (
+                        <TechIconCardExperience model={techStackIcon} />
+                      )}
+                    </Suspense>
+                  </SceneErrorBoundary>
                 </div>
                 {/* The padding-x and w-full classes are used to add horizontal padding to the 
                     text and make it take up the full width of the component. */}

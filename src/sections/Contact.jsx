@@ -1,7 +1,9 @@
-import { useRef, useState, lazy, Suspense } from "react";
+import { useRef, useState, useEffect, lazy, Suspense } from "react";
 import emailjs from "@emailjs/browser";
 
 import TitleHeader from "../components/TitleHeader";
+import SceneErrorBoundary from "../components/SceneErrorBoundary";
+import { useInView } from "../hooks/useInView";
 
 const ContactExperience = lazy(() =>
   import("../components/models/contact/ContactExperience")
@@ -9,6 +11,7 @@ const ContactExperience = lazy(() =>
 
 const Contact = () => {
   const formRef = useRef(null);
+  const [sceneRef, sceneInView] = useInView("300px");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(null); // null | "success" | "error"
   const [form, setForm] = useState({
@@ -16,6 +19,24 @@ const Contact = () => {
     email: "",
     message: "",
   });
+
+  useEffect(() => {
+    // Tells you exactly which env var is missing at page load, instead of
+    // waiting for a submit to fail with EmailJS's generic error message.
+    const required = [
+      "VITE_APP_EMAILJS_SERVICE_ID",
+      "VITE_APP_EMAILJS_TEMPLATE_ID",
+      "VITE_APP_EMAILJS_PUBLIC_KEY",
+    ];
+    const missing = required.filter((key) => !import.meta.env[key]);
+    if (missing.length > 0) {
+      console.warn(
+        `[Contact] Missing from .env: ${missing.join(", ")}. ` +
+          "Make sure .env sits next to package.json (not inside src/) and " +
+          "restart `npm run dev` after adding or editing it."
+      );
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -140,12 +161,29 @@ const Contact = () => {
             </div>
           </div>
           <div className="xl:col-span-7 min-h-96">
-            <div className="bg-[#cd7c2e] w-full h-full hover:cursor-grab rounded-3xl overflow-hidden">
-              <Suspense
-                fallback={<div className="w-full h-full animate-pulse" />}
+            <div
+              ref={sceneRef}
+              className="bg-[#cd7c2e] w-full h-full hover:cursor-grab rounded-3xl overflow-hidden"
+            >
+              <SceneErrorBoundary
+                label="Contact scene"
+                fallback={
+                  <div className="w-full h-full flex items-center justify-center text-white/70 text-sm p-4 text-center">
+                    Couldn't load the 3D scene here — check the console (F12)
+                    for the exact error.
+                  </div>
+                }
               >
-                <ContactExperience />
-              </Suspense>
+                <Suspense
+                  fallback={
+                    <div className="w-full h-full flex items-center justify-center text-white/70 text-sm">
+                      Loading…
+                    </div>
+                  }
+                >
+                  {sceneInView && <ContactExperience />}
+                </Suspense>
+              </SceneErrorBoundary>
             </div>
           </div>
         </div>

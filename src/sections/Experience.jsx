@@ -43,22 +43,18 @@ const Experience = () => {
     gsap.to(".timeline", {
       // Set the origin of the animation to the bottom of the timeline
       transformOrigin: "bottom bottom",
-      // Animate the timeline height over 1 second
+      // Scrub ties this tween's progress directly to scroll position —
+      // no per-tick callback needed, and no new tween objects allocated
+      // on every scroll frame (the previous version called gsap.to()
+      // again inside onUpdate, on every single scroll tick, which is
+      // what was causing the scroll jank).
+      scaleY: 0,
       ease: "power1.inOut",
-      // Trigger the animation when the timeline is at the top of the screen
-      // and end it when the timeline is at 70% down the screen
       scrollTrigger: {
         trigger: ".timeline",
         start: "top center",
         end: "70% center",
-        // Update the animation as the user scrolls
-        onUpdate: (self) => {
-          // Scale the timeline height as the user scrolls
-          // from 1 to 0 as the user scrolls up the screen
-          gsap.to(".timeline", {
-            scaleY: 1 - self.progress,
-          });
-        },
+        scrub: true,
       },
     });
 
@@ -105,8 +101,12 @@ const Experience = () => {
               <div key={card.title} className="exp-card-wrapper">
                 <div className="xl:w-2/6">
                   <GlowCard card={card} showRating={false}>
-                    <div>
-                      <img src={card.imgPath} alt="exp-img" />
+                    <div className="flex items-center justify-center bg-white rounded-lg p-6 h-40">
+                      <img
+                        src={card.imgPath}
+                        alt={card.title}
+                        className="max-w-full max-h-full object-contain"
+                      />
                     </div>
                   </GlowCard>
                 </div>
@@ -118,7 +118,13 @@ const Experience = () => {
                     </div>
                     <div className="expText flex xl:gap-20 md:gap-10 gap-5 relative z-20">
                       <div className="timeline-logo">
-                        <img src={card.logoPath} alt="logo" />
+                        <div className="bg-white rounded-full p-2 flex items-center justify-center size-full">
+                          <img
+                            src={card.logoPath}
+                            alt={`${card.title} logo`}
+                            className="max-w-full max-h-full object-contain"
+                          />
+                        </div>
                       </div>
                       <div>
                         <h1 className="font-semibold text-3xl">{card.title}</h1>

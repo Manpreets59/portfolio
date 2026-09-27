@@ -111,19 +111,43 @@ const techStackIcons = [
   },
 ];
 
-// Experience timeline: real open-source + hackathon work instead of the template's fake jobs.
+// Experience timeline: real open-source + hackathon work, each with its
+// actual project logo (sourced from each project's own GitHub repo).
 const expCards = [
   {
     review:
-      "Opened production PRs across three CNCF-ecosystem projects — closing a type-safety gap in Headlamp, fixing a resource-quantity parser in Volcano Dashboard, and iterating a workflow-engine bug in Kestra through multiple rounds of maintainer review.",
-    imgPath: "/images/exp-opensource.svg",
-    logoPath: "/images/exp-opensource.svg",
-    title: "Open Source Contributor — CNCF Ecosystem",
-    date: "November 2024 - Present",
+      "Opened PR #7161 replacing Promise<any> return types in the namespaced API client with correctly inferred generics, closing a type-safety gap the sibling cluster-scoped client didn't have.",
+    imgPath: "/images/headlamp-logo.svg",
+    logoPath: "/images/headlamp-logo.svg",
+    title: "Open Source Contributor — Headlamp (Kubernetes SIGs)",
+    date: "Nov 2024 - Present",
     responsibilities: [
-      "Headlamp (kubernetes-sigs, 7.1k★): replaced Promise<any> return types in the namespaced API client with correctly inferred generics, closing a type-safety gap.",
-      "Volcano Dashboard (CNCF Incubating): fixed a queue resource-quantity parser that silently accepted invalid Kubernetes memory/CPU suffixes instead of rejecting malformed input.",
-      "Kestra (11k★ workflow engine): fixed a workflow-level bug, iterating through CI failures and maintainer review across multiple revision rounds.",
+      "Headlamp (kubernetes-sigs, 7.1k★): replaced Promise<any> return types in the namespaced API client with correctly inferred generics.",
+      "Closed a type-safety gap that the sibling cluster-scoped client didn't have, catching mistakes at compile time instead of runtime.",
+    ],
+  },
+  {
+    review:
+      "Opened PR #371 fixing a queue resource-quantity parser that silently accepted invalid Kubernetes memory/CPU suffixes instead of rejecting malformed input.",
+    imgPath: "/images/volcano-logo.png",
+    logoPath: "/images/volcano-logo.png",
+    title: "Open Source Contributor — Volcano Dashboard",
+    date: "Nov 2024 - Present",
+    responsibilities: [
+      "Volcano Dashboard (volcano-sh, CNCF Incubating): fixed a queue resource-quantity parser that silently accepted invalid Kubernetes memory/CPU suffixes (e.g. 500mi read as 500Mi).",
+      "Ensured malformed input is rejected before it reaches the API, instead of failing silently downstream.",
+    ],
+  },
+  {
+    review:
+      "Fixed a workflow-level bug in Kestra's 11k★ orchestration engine, iterating through CI failures and maintainer review across multiple revision rounds.",
+    imgPath: "/images/kestra-logo.svg",
+    logoPath: "/images/kestra-logo.svg",
+    title: "Open Source Contributor — Kestra",
+    date: "Nov 2024 - Present",
+    responsibilities: [
+      "Kestra (11k★ open-source orchestration platform): opened a PR fixing a workflow-level bug.",
+      "Iterated through CI failures and maintainer review across multiple revision rounds before merge.",
     ],
   },
   {

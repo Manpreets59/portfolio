@@ -4,6 +4,7 @@ import { lazy, Suspense } from "react";
 
 import AnimatedCounter from "../components/AnimatedCounter";
 import Button from "../components/Button";
+import SceneErrorBoundary from "../components/SceneErrorBoundary";
 import { words } from "../constants";
 
 // Code-split the Three.js/R3F scene out of the main bundle — it's the
@@ -57,7 +58,9 @@ const Hero = () => {
             </div>
 
             <p className="text-white-50 md:text-xl relative z-10 pointer-events-none">
-              Hi, I’m Manpreet, a full-stack developer
+              Hi, I’m Manpreet, a full-stack developer who builds
+              backend-heavy, real-time systems with Node.js, TypeScript, and
+              React.
             </p>
 
             <Button
@@ -71,13 +74,15 @@ const Hero = () => {
         {/* RIGHT: 3D Model or Visual */}
         <figure>
           <div className="hero-3d-layout">
-            <Suspense
-              fallback={
-                <div className="w-full h-full animate-pulse rounded-3xl bg-white/5" />
-              }
-            >
-              <HeroExperience />
-            </Suspense>
+            <SceneErrorBoundary label="Hero scene">
+              <Suspense
+                fallback={
+                  <div className="w-full h-full animate-pulse rounded-3xl bg-white/5" />
+                }
+              >
+                <HeroExperience />
+              </Suspense>
+            </SceneErrorBoundary>
           </div>
         </figure>
       </div>
