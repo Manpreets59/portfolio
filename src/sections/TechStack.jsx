@@ -5,11 +5,29 @@ import { lazy, Suspense } from "react";
 import TitleHeader from "../components/TitleHeader";
 import SceneErrorBoundary from "../components/SceneErrorBoundary";
 import { useInView } from "../hooks/useInView";
+import { useIsVisible } from "../hooks/useIsVisible";
 import { techStackIcons, techStackImgs } from "../constants";
 
 const TechIconCardExperience = lazy(() =>
   import("../components/models/tech_logos/TechIconCardExperience")
 );
+
+// Pauses this icon's render loop while it is off-screen.
+const TechIcon = ({ tech, imgPath, mounted }) => {
+  const [ref, visible] = useIsVisible("100px");
+  const fallback = (
+    <img src={imgPath} alt={tech.name} className="w-1/2 h-1/2 object-contain opacity-70" />
+  );
+  return (
+    <div ref={ref} className="w-full h-full flex-center">
+      <SceneErrorBoundary label={`${tech.name} 3D icon`} fallback={fallback}>
+        <Suspense fallback={fallback}>
+          {mounted && <TechIconCardExperience model={tech} active={visible} />}
+        </Suspense>
+      </SceneErrorBoundary>
+    </div>
+  );
+};
 
 const TechStack = () => {
   // Delays mounting the 5 separate WebGL canvases below until this section
@@ -73,30 +91,11 @@ const TechStack = () => {
                     renders instantly as a fallback so the icon is never blank while the
                     3D chunk + model are still loading. */}
                 <div className="tech-icon-wrapper">
-                  <SceneErrorBoundary
-                    label={`${techStackIcon.name} 3D icon`}
-                    fallback={
-                      <img
-                        src={techStackImgs[index]?.imgPath}
-                        alt={techStackIcon.name}
-                        className="w-1/2 h-1/2 object-contain opacity-70"
-                      />
-                    }
-                  >
-                    <Suspense
-                      fallback={
-                        <img
-                          src={techStackImgs[index]?.imgPath}
-                          alt={techStackIcon.name}
-                          className="w-1/2 h-1/2 object-contain opacity-70"
-                        />
-                      }
-                    >
-                      {inView && (
-                        <TechIconCardExperience model={techStackIcon} />
-                      )}
-                    </Suspense>
-                  </SceneErrorBoundary>
+                  <TechIcon
+                    tech={techStackIcon}
+                    imgPath={techStackImgs[index]?.imgPath}
+                    mounted={inView}
+                  />
                 </div>
                 {/* The padding-x and w-full classes are used to add horizontal padding to the 
                     text and make it take up the full width of the component. */}

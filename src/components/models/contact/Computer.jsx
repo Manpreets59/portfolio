@@ -1,5 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 
+useGLTF.setDecoderPath("/draco/");
+
 export function Computer(props) {
   const { nodes, materials } = useGLTF(
     "/models/computer-optimized-transformed.glb"

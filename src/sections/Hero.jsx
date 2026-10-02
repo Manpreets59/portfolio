@@ -6,6 +6,7 @@ import AnimatedCounter from "../components/AnimatedCounter";
 import Button from "../components/Button";
 import SceneErrorBoundary from "../components/SceneErrorBoundary";
 import { words } from "../constants";
+import { useIsVisible } from "../hooks/useIsVisible";
 
 // Code-split the Three.js/R3F scene out of the main bundle — it's the
 // heaviest chunk on the page and isn't needed for the first paint.
@@ -14,6 +15,7 @@ const HeroExperience = lazy(() =>
 );
 
 const Hero = () => {
+  const [sceneRef, sceneVisible] = useIsVisible("100px");
   useGSAP(() => {
     gsap.fromTo(
       ".hero-text h1",
@@ -73,14 +75,14 @@ const Hero = () => {
 
         {/* RIGHT: 3D Model or Visual */}
         <figure>
-          <div className="hero-3d-layout">
+          <div className="hero-3d-layout" ref={sceneRef}>
             <SceneErrorBoundary label="Hero scene">
               <Suspense
                 fallback={
                   <div className="w-full h-full animate-pulse rounded-3xl bg-white/5" />
                 }
               >
-                <HeroExperience />
+                <HeroExperience active={sceneVisible} />
               </Suspense>
             </SceneErrorBoundary>
           </div>

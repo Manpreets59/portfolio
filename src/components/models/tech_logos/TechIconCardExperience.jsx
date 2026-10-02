@@ -3,7 +3,10 @@ import { Canvas } from "@react-three/fiber";
 import { useEffect } from "react";
 import * as THREE from "three";
 
-const TechIconCardExperience = ({ model }) => {
+// Self-host the Draco decoder instead of fetching it from gstatic.com at runtime.
+useGLTF.setDecoderPath("/draco/");
+
+const TechIconCardExperience = ({ model, active = true }) => {
   const scene = useGLTF(model.modelPath);
 
   useEffect(() => {
@@ -21,7 +24,7 @@ const TechIconCardExperience = ({ model }) => {
   }, [scene]);
 
   return (
-    <Canvas dpr={[1, 1.5]}>
+    <Canvas dpr={[1, 1.5]} frameloop={active ? "always" : "never"}>
       {/* Local-only lighting instead of <Environment preset="city" />.
           Environment was fetching an HDR map from a remote CDN on every
           one of the 5 tech-icon canvases on this page — slow/blocked
