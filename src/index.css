@@ -470,3 +470,11 @@ section {
 .card:hover::before {
   opacity: 1;
 }
+
+/* Show the whole Vertex cover on phones instead of cropping its sides. */
+@media (max-width: 767px) {
+  .app-showcase .first-project-wrapper .image-wrapper {
+    height: auto;
+    aspect-ratio: 1600 / 1350;
+  }
+}

@@ -55,7 +55,7 @@ const AppShowcase = () => {
             className="first-project-wrapper"
           >
             <div className="image-wrapper">
-              <img src="/images/project1.png" alt="Vertex code editor" />
+              <img src="/images/project1.webp" alt="Vertex code editor" />
             </div>
             <div className="text-content">
               <h2>
@@ -78,9 +78,9 @@ const AppShowcase = () => {
               className="project"
               ref={quantumCareRef}
             >
-              <div className="image-wrapper bg-[#FFEFDB]">
+              <div className="image-wrapper bg-[#FAFAFA]">
                 <img
-                  src="/images/project2.png"
+                  src="/images/project2.webp"
                   alt="QuantumCare healthcare platform"
                 />
               </div>
@@ -94,8 +94,8 @@ const AppShowcase = () => {
               className="project"
               ref={mentorMindRef}
             >
-              <div className="image-wrapper bg-[#FFE7EB]">
-                <img src="/images/project3.png" alt="MentorMind AI tutor" />
+              <div className="image-wrapper bg-[#FAFAFA]">
+                <img src="/images/project3.webp" alt="MentorMind AI tutor" />
               </div>
               <h2>MentorMind — AI Tutor with Persistent Memory</h2>
             </a>
